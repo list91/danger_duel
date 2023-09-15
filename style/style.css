@@ -2,9 +2,15 @@
     width: 50px;
     height: 50px;
     background-color: blue;
-    position: absolute;
-    left: 0;
-    top: 0;
+    position: fixed;
+    /* top: 50%; */
+    /* left: 50%; */
+    /* transform: translate(-50%, -50%); */
+}
+#camera{
+    width: 100%; /* Предполагается, что камера занимает всё окно просмотра */
+    height: 100%;
+    overflow: auto;
 }
 
 #inventory{position: absolute;}

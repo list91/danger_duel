@@ -34,26 +34,40 @@ export default class Player {
     }
   
     move() {
-        if (this.isUp) {
-          this.moveUp();
+        if (this.isRight && this.isDown) {
+            this.moveRight(); 
+            this.moveDown(); 
+        } else if (this.isLeft && this.isDown) {
+            this.moveLeft(); 
+            this.moveDown();
+        } else if (this.isLeft && this.isUp) {
+            this.moveLeft(); 
+            this.moveUp();
+        } else if (this.isRight && this.isUp) {
+            this.moveRight(); 
+            this.moveUp();
         } else if (this.isDown) {
-          this.moveDown();
+            this.moveDown();
         } else if (this.isLeft) {
-          this.moveLeft();
+            this.moveLeft();
+            // if(this.isDown){
+            //     this.moveDown();
+            // }
         } else if (this.isRight) {
-          this.moveRight();
+            this.moveRight();
+        } else if (this.isUp) {
+            this.moveUp();
         }
       }
-    }
   
     moveLeft() {
-      this.xPos -= this.speedPlayer;
-      this.player.style.left = this.xPos + "px";
+        this.xPos -= this.speedPlayer;
+        this.player.style.left = this.xPos + "px";
     }
   
     moveRight() {
-      this.xPos += this.speedPlayer;
-      this.player.style.left = this.xPos + "px";
+        this.xPos += this.speedPlayer;
+        this.player.style.left = this.xPos + "px";
     }
     moveUp() {
         this.yPos -= this.speedPlayer;
@@ -61,7 +75,7 @@ export default class Player {
       }
     
     moveDown() {
-    this.yPos += this.speedPlayer;
+        this.yPos += this.speedPlayer;
         this.player.style.top = this.yPos + "px";
     }
   
