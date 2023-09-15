@@ -1,0 +1,74 @@
+#player {
+    width: 50px;
+    height: 50px;
+    background-color: blue;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#inventory{position: absolute;}
+.slot{
+    border: 3px solid;
+    display: inline-block;
+    border-radius: 0 0 10px 10px;
+}
+#gun_title{
+    background-color: brown;
+}
+
+#bullet_title{
+    background-color: darkgoldenrod;
+}
+
+.platform {    
+    position: absolute;
+}
+.platform1 {
+    width: 100%;
+    height: 20px;
+    background-color: rgb(19, 87, 19);
+    margin-top: 600px;
+}
+.platform2 {
+    width: 100px;
+    height: 20px;
+    background-color: rgb(52, 187, 52);
+    margin-top: 400px;
+}
+
+.platform3 {
+    width: 100px;
+    height: 20px;
+    background-color: rgb(31, 143, 31);
+    margin-top: 550px;
+    margin-left: 150px;
+}
+
+.bullet {
+    width: 50px;
+    height: 3px;
+    background-color: red;
+    position: absolute;
+    z-index: 100;
+}
+
+.line {
+    width: 100px;
+    height: 2px;
+    background-color: gray;
+    position: absolute;
+    top: calc(50% - 0px);
+    /* left: calc(50% - 0px); */
+    transform-origin: center;
+    transform: rotate(-45deg);
+}
+
+#cursor {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    /* background-color: gray; */
+    border: 2px solid gray;
+    position: absolute;
+}
