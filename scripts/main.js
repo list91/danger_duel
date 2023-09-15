@@ -2,6 +2,7 @@ import Player from './hero/hero.js'
 
 const hero = new Player;
 const playerObject = hero.player;
+
 // platforms
 function update() {
     // move();
