@@ -1,16 +1,25 @@
+body{
+    width: 3000px;
+    height: 3000px;
+}
+
 #player {
     width: 50px;
     height: 50px;
     background-color: blue;
-    position: fixed;
-    /* top: 50%; */
-    /* left: 50%; */
-    /* transform: translate(-50%, -50%); */
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: rotate(270deg);
+    transform-origin: center;
 }
 #camera{
-    width: 100%; /* Предполагается, что камера занимает всё окно просмотра */
+    width: 100%;
     height: 100%;
     overflow: auto;
+    position: fixed; /* добавляем fixed */
+    top: 0;
+    left: 0;
 }
 
 #inventory{position: absolute;}
