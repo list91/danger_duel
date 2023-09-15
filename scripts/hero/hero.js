@@ -34,29 +34,35 @@ export default class Player {
     }
   
     move() {
-      if (this.isLeft) {
-        this.moveLeft();
-      } else if (this.isRight) {
-        this.moveRight();
+        if (this.isUp) {
+          this.moveUp();
+        } else if (this.isDown) {
+          this.moveDown();
+        } else if (this.isLeft) {
+          this.moveLeft();
+        } else if (this.isRight) {
+          this.moveRight();
+        }
       }
     }
   
     moveLeft() {
-      let leftPosition = parseInt(
-        window.getComputedStyle(this.player).getPropertyValue("left")
-      );
-      this.xPos = leftPosition - this.xSpeed;
-      this.inventory.style.left = this.xPos + "px";
+      this.xPos -= this.speedPlayer;
       this.player.style.left = this.xPos + "px";
     }
   
     moveRight() {
-      let leftPosition = parseInt(
-        window.getComputedStyle(this.player).getPropertyValue("left")
-      );
-      this.xPos = leftPosition + this.xSpeed;
-      this.inventory.style.left = this.xPos + "px";
+      this.xPos += this.speedPlayer;
       this.player.style.left = this.xPos + "px";
+    }
+    moveUp() {
+        this.yPos -= this.speedPlayer;
+        this.player.style.top = this.yPos + "px";
+      }
+    
+    moveDown() {
+    this.yPos += this.speedPlayer;
+        this.player.style.top = this.yPos + "px";
     }
   
     handleCollisions(platform) {
@@ -268,24 +274,30 @@ export default class Player {
       });
   
       document.addEventListener("keydown", (event) => {
-        if (event.key === "ArrowRight") {
+        if (event.key === "d") {
           this.isLeft = false;
           this.isRight = true;
-        } else if (event.key === "ArrowLeft") {
+        } else if (event.key === "a") {
           this.isRight = false;
           this.isLeft = true;
-        } else if (event.key === "ArrowUp") {
-          this.jump();
+        } else if (event.key === "w") {
+          this.isUp = true;
+          this.isDown = false;
+        } else if (event.key === "s") {
+            this.isDown = true;
+            this.isUp = false;
         }
       });
   
       document.addEventListener("keyup", (event) => {
-        if (event.key === "ArrowRight") {
+        if (event.key === "d") {
           this.isRight = false;
-        } else if (event.key === "ArrowLeft") {
+        } else if (event.key === "a") {
           this.isLeft = false;
-        } else if (event.key === "ArrowUp") {
-          this.jump();
+        } else if (event.key === "w") {
+            this.isUp = false;
+        } else if (event.key === "s") {
+            this.isDown = false;
         }
       });
   
