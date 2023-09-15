@@ -1,0 +1,19 @@
+.hp_bar{
+	min-width: 50px;
+	min-height: 20px;
+	height: 100%;
+	width: 100%;
+	border: 5px solid #000;
+}
+
+.bar{
+	background-color: #FF0000;
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+.primer{
+	height: 50px;
+	width: 200px;
+}
