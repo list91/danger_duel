@@ -1,7 +1,10 @@
+import Enemy from './enemies/enemy.js';
 import Player from './hero/hero.js'
 
 const hero = new Player;
 const playerObject = hero.player;
+
+const enemy = new Enemy(100, 100);
 
 // platforms
 function update() {
