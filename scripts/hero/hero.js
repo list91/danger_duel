@@ -27,6 +27,10 @@ export default class Player {
         this.setStartPositionXY();
     }
 
+    getPlayer(){
+        return this.player;
+    }
+
     setStartPositionXY() {
         this.player.style.left = this.xPos + "px";
         this.player.style.top = this.yPos + "px";
@@ -93,7 +97,7 @@ export default class Player {
                 ){
                     console.log(bullet.style.x, bullet.style.y);
                     
-                    this.createCollisionBlock(bulletRect.left, bulletRect.top);
+                    this.createCollisionBlock(bulletRect.left, platformRect.top);
                     bullet.style.display = "none";
                     // bullet.style.top = this.yPos + "px"; 
             }
