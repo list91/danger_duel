@@ -80,6 +80,24 @@ export default class Player {
         let playerRect = this.player.getBoundingClientRect();
         let platformRect = platform.getBoundingClientRect();
         let inventoryRect = this.inventory.getBoundingClientRect();
+        let bullets = document.getElementsByClassName("bullet");
+        for(let bullet of bullets){
+            
+            let bulletRect = bullet.getBoundingClientRect();
+            console.log(bullet.style.bottom);
+            
+            if(bulletRect.bottom >= platformRect.top &&
+                bulletRect.top <= platformRect.bottom &&
+                bulletRect.right >= platformRect.left &&
+                bulletRect.left <= platformRect.right
+                ){
+                    console.log(bullet.style.x, bullet.style.y);
+                    
+                    this.createCollisionBlock(bulletRect.left, bulletRect.top);
+                    bullet.style.display = "none";
+                    // bullet.style.top = this.yPos + "px"; 
+            }
+        }
 
         this.inventory.style.top =
             playerRect.top - inventoryRect.height + "px";
@@ -270,6 +288,17 @@ export default class Player {
         const angle = Math.atan2(cursorY - playerY, cursorX - playerX);
 
         this.player.style.transform = `rotate(${angle}rad)`;
+    }
+
+    createCollisionBlock(x, y) {
+        const block = document.createElement("div");
+        block.style.position = "absolute";
+        block.style.width = "5px";
+        block.style.height = "5px";
+        block.style.left = x + "px";
+        block.style.top = y + "px";
+        block.style.background = "red";
+        document.body.appendChild(block);
     }
 
     addEventListeners() {
