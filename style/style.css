@@ -21,6 +21,9 @@ body{
     top: 0;
     left: 0;
 }
+.enemy_bar{
+    background-color:brown;
+}
 
 /* #inventory{position: absolute;} */
 .slot{
