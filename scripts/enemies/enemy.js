@@ -5,8 +5,14 @@ export default class Enemy {
         this.speedPlayer = 5;
 
         // после вызова этого метода в поле enemy находится созданный объект 
-        this.createEnemyBlock();
+        var top = Math.floor(Math.random() * 1000);
+        var left = Math.floor(Math.random() * 1000);
+        console.log(top);
+        console.log(left);
+        this.createEnemyBlock(top, left);
 
+        this.createHpBar(top-30, left);
+        
         this.platforms = document.getElementsByClassName("platform");
         this.ySpeed = 0;
         this.xSpeed = 0;
@@ -18,8 +24,18 @@ export default class Enemy {
 
         // this.moveRight();
     }
-    checkDamage(bullet){
-        
+    checkDamage(bullet) {
+        const enemyRect = this.enemy.getBoundingClientRect();
+        const bulletRect = bullet.getBoundingClientRect();
+
+        if (
+            bulletRect.bottom >= enemyRect.top &&
+            bulletRect.top <= enemyRect.bottom &&
+            bulletRect.right >= enemyRect.left &&
+            bulletRect.left <= enemyRect.right
+        ) {
+            this.hpBar.style.backgroundColor = "rgb(0 0 255)";
+        }
     }
 
     runActionToPlayer(player){
@@ -36,7 +52,21 @@ export default class Enemy {
         console.log(distanceX);
     }
 
-    createEnemyBlock(){
+    createHpBar(top, left){
+        // this.enemy = document.getElementById("player");
+        this.hpBar = document.createElement("div");
+        this.hpBar.setAttribute("class", "enemy");
+        this.hpBar.style.backgroundColor = "rgb(255 0 0)";
+        this.hpBar.style.width = "100px";
+        this.hpBar.style.height = "20px";
+        this.hpBar.style.position = "absolute";
+        this.hpBar.style.top = top + "px";
+        this.hpBar.style.left = left + "px";
+        this.setStartPositionXY(top, left);
+        document.body.appendChild(this.hpBar);
+    }
+    
+    createEnemyBlock(top, left){
         // this.enemy = document.getElementById("player");
         this.enemy = document.createElement("div");
         this.enemy.setAttribute("class", "enemy");
@@ -44,13 +74,15 @@ export default class Enemy {
         this.enemy.style.width = "50px";
         this.enemy.style.height = "50px";
         this.enemy.style.position = "absolute";
-        this.setStartPositionXY();
+        this.enemy.style.top = top + "px";
+        this.enemy.style.left = left + "px";
+        this.setStartPositionXY(top, left);
         document.body.appendChild(this.enemy);
     }
 
-    setStartPositionXY() {
-        this.enemy.style.left = this.xPos + "px";
-        this.enemy.style.top = this.yPos + "px";
+    setStartPositionXY(top, left) {
+        this.enemy.style.left = left + "px";
+        this.enemy.style.top = top + "px";
     }
 
     move() {

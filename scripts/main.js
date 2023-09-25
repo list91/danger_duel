@@ -4,14 +4,22 @@ import Player from './hero/hero.js'
 const hero = new Player;
 const playerObject = hero.player;
 
-const enemy = new Enemy(100, 100);
-
+const enemy1 = new Enemy(100, 100);
+const enemy2 = new Enemy(100, 100);
 // platforms
 function update() {
     // enemy.moveRight();
     // enemy.runActionToPlayer(playerObject);
     // move();
     hero.move();
+
+
+    const bullets = document.getElementsByClassName("bullet");
+    for(let bullet of bullets){
+        enemy1.checkDamage(bullet);
+    }
+    
+    // console.log(hero.bullets);
 
     let ySpeed = hero.ySpeed;
     let gravity = hero.gravity;
