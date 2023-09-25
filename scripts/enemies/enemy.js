@@ -3,7 +3,10 @@ export default class Enemy {
         this.xPos = x;
         this.yPos = y;
         this.speedPlayer = 5;
+
+        // после вызова этого метода в поле enemy находится созданный объект 
         this.createEnemyBlock();
+
         this.platforms = document.getElementsByClassName("platform");
         this.ySpeed = 0;
         this.xSpeed = 0;
@@ -12,14 +15,25 @@ export default class Enemy {
         this.isUp = false;
         this.isDown = false;
         this.currentXSpeed = this.xSpeed;
+
+        // this.moveRight();
+    }
+    checkDamage(bullet){
+        
     }
 
     runActionToPlayer(player){
-        playerObj = player.getPlayer();
-        playerX = playerObj.getBoundingClientRect.left;
-        playerY = playerObj.getBoundingClientRect.top;
-
-        
+        const enemyLeft = this.enemy.offsetLeft;
+        const enemyTop = this.enemy.offsetTop;
+        const playerLeft = player.offsetLeft;
+        const olayerTop = player.offsetTop;
+      
+        const distanceX = playerLeft - enemyLeft;
+        const distanceY = olayerTop - enemyTop;
+      
+        this.enemy.style.left = (enemyLeft + distanceX / 100) + 'px';
+        this.enemy.style.top = (enemyTop + distanceY / 100) + 'px';
+        console.log(distanceX);
     }
 
     createEnemyBlock(){
@@ -65,22 +79,22 @@ export default class Enemy {
 
     moveLeft() {
         this.xPos -= this.speedPlayer;
-        this.player.style.left = this.xPos + "px";
+        this.enemy.style.left = this.xPos + "px";
     }
 
     moveRight() {
         this.xPos += this.speedPlayer;
-        this.player.style.left = this.xPos + "px";
+        this.enemy.style.left = this.xPos + "px";
     }
 
     moveUp() {
         this.yPos -= this.speedPlayer;
-        this.player.style.top = this.yPos + "px";
+        this.enemy.style.top = this.yPos + "px";
     }
 
     moveDown() {
         this.yPos += this.speedPlayer;
-        this.player.style.top = this.yPos + "px";
+        this.enemy.style.top = this.yPos + "px";
     }
 
     handleCollisions(platform) {

@@ -8,6 +8,8 @@ const enemy = new Enemy(100, 100);
 
 // platforms
 function update() {
+    // enemy.moveRight();
+    // enemy.runActionToPlayer(playerObject);
     // move();
     hero.move();
 
