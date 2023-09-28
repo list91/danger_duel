@@ -1,16 +1,23 @@
 export default class Player {
-    constructor() {
-        this.inventory = document.getElementById("inventory");
+    constructor(gun) {
+        this.THIS_GUN = gun;
+        this.inventory = document.getElementById("hp");
+        this.inventory.style.width = "324px"
+        this.gunInit();
+        this.hpMax = 60;
+        this.hpBar = document.getElementById("hp_bar");
+        this.hpBar.style.width = "300px"
+        console.log(this.hpBar.style.width);
+        this.hpMaxSise = parseInt(this.hpBar.style.width);
+        this.HP = this.hpMax;
         this.player = document.getElementById("player");
-        this.speedPlayer = 5;
-        this.bullet_indicator = document.getElementById("bullet");
+        this.speedPlayer = 8;
+        this.rechargeSpeed = gun.getRechargeSpeed();
+        this.shooting = true;
         this.platforms = document.getElementsByClassName("platform");
         this.line = document.getElementsByClassName("line")[0];
         this.bulletSpeed = 80;
-        this.bulletsFinal = 32;
-        this.bulletsGlobal = 32;
-        this.allBullets = this.bulletsFinal;
-        this.xPos = 820;
+        this.xPos = 52;
         this.yPos = 310;
         this.ySpeed = 0;
         this.xSpeed = 0;
@@ -22,7 +29,7 @@ export default class Player {
         this.currentXSpeed = this.xSpeed;
         this.bullets = [];
         this.angleGlobal = 0;
-        this.bullet_indicator.textContent = this.allBullets + "/" + this.bulletsFinal;
+        this.updateHP();
         this.addEventListeners();
         this.setStartPositionXY();
     }
@@ -38,6 +45,23 @@ export default class Player {
         // console.log(hpSise);
         //максимальное число умнажаем на желаемы процент и делим на 100
         return this.hpMax*hpPixelProc/100;
+    }
+    setGun(gun){
+        this.THIS_GUN = gun;
+        this.gunInit();
+    }
+    gunInit(){
+        this.radiusSpeed = this.THIS_GUN.getRadiusSpeed();
+        this.bulletCount = this.THIS_GUN.getCountsSize();
+        this.bullet_name = document.getElementById("gun");
+        this.bullet_indicator = document.getElementById("bullet");
+        this.bulletsFinal = this.THIS_GUN.getMaxBullets();
+        this.damage = this.THIS_GUN.getDamage();
+        this.allBullets = this.bulletsFinal;
+
+        this.bulletPeriod = this.THIS_GUN.getSpeed();
+        this.bullet_indicator.textContent = this.allBullets + "/" + this.bulletsFinal;
+        this.bullet_name.textContent = this.THIS_GUN.getTitle();
     }
     getDamage(){
         return this.damage;
@@ -132,7 +156,7 @@ export default class Player {
         for(let bullet of bullets){
             
             let bulletRect = bullet.getBoundingClientRect();
-            console.log(bullet.style.bottom);
+            // console.log(bullet.style.bottom);
             
             if(bulletRect.bottom >= platformRect.top &&
                 bulletRect.top <= platformRect.bottom &&
@@ -141,14 +165,14 @@ export default class Player {
                 ){
                     console.log(bullet.style.x, bullet.style.y);
                     
-                    this.createCollisionBlock(bulletRect.left, platformRect.top);
+                    // this.createCollisionBlock(bulletRect.left, platformRect.top);
                     bullet.style.display = "none";
                     // bullet.style.top = this.yPos + "px"; 
             }
         }
 
-        this.inventory.style.top =
-            playerRect.top - inventoryRect.height + "px";
+        // this.inventory.style.top =
+            // playerRect.top - inventoryRect.height + "px";
 
         if (
             playerRect.bottom >= platformRect.top &&
@@ -167,13 +191,15 @@ export default class Player {
     }
 
     createBullet(xPos, yPos, angle) {
+        // for (let i = 0; i < 2; i++) {
+        //     // enemiesList.push(new Enemy(100, 100))
+        // }
         const bullet = document.createElement("div");
         bullet.setAttribute("class", "bullet");
         bullet.style.left = xPos + this.player.style.width + "px";
         bullet.style.top = yPos + "px";
         bullet.style.transform = "rotate(" + angle + "rad)";
         document.body.appendChild(bullet);
-
         this.bullets.push({
             element: bullet,
             xSpeed: Math.cos(angle) * this.bulletSpeed,
@@ -212,7 +238,8 @@ export default class Player {
         const distance = Math.sqrt(
             Math.pow(cursorX - playerX, 2) + Math.pow(cursorY - playerY, 2)
         );
-        const radiusSpeed = 0.1;
+        const radiusSpeed = this.radiusSpeed;
+        // const radiusSpeed = 0.1;
         const radius = distance * radiusSpeed;
         return radius;
     }
@@ -230,12 +257,18 @@ export default class Player {
     }
 
     handleMouseDown(event) {
-        if (event.button === 0) {
+        
+        if (event.button === 0 && this.shooting) {
             this.mouseDown = true;
             this.handleClick(event);
             this.mouseInterval = setInterval(() => {
+                console.log("this.mouseDown "+this.mouseDown);
+                if(!this.mouseDown){
+                    clearInterval(this.mouseInterval);
+                } else {
                 this.handleClick(event);
-            }, 100);
+                }
+            },  this.bulletPeriod);
         }
     }
 
@@ -262,29 +295,51 @@ export default class Player {
         const lineWidth = lineRect.width;
         const lineHeight = lineRect.height;
 
+        const bulletCount = this.bulletCount;
+        console.log("bulletCount "+this.allBullets);
+        if (this.allBullets > 0) {
+        for (let i = 0; i < bulletCount; i++) {
         const randomX = Math.floor(Math.random() * lineWidth) + lineX;
         const randomY = Math.floor(Math.random() * lineHeight) + lineY;
 
         const angle = Math.atan2(randomY - playerY, randomX - playerX);
-        if (this.allBullets > 0) {
             let UGOL = angle * (180 / Math.PI);
             let finishUgol = this.findAngleC(
                 UGOL,
                 this.distanceBetweenPoints(clickX, clickY, playerX, playerY)
             );
 
-            this.createBullet(playerX, playerY, angle);
+                this.createBullet(playerX, playerY, angle);
+                // this.createBullet(playerX, playerY, angle);
 
-            this.allBullets -= 1;
-            this.bullet_indicator.textContent =
+                this.allBullets -= 1;
+                this.bullet_indicator.textContent =
                 this.allBullets + "/" + this.bulletsFinal;
+            }
         }
     }
 
     recharge() {
-        this.allBullets = 32;
-        this.bullet_indicator.textContent =
-            this.allBullets + "/" + this.bulletsFinal;
+        var rechargeMaxSize = 162;
+        var rechargeBlock = document.getElementById("recharge");
+        rechargeBlock.style.display = "block";
+        document.getElementById("recharge_bar").style.width = "0px";
+        var speed = this.rechargeSpeed;
+        var intervalId = setInterval(() => {
+            // var shooting = false;
+            var width = parseFloat(document.getElementById("recharge_bar").style.width);
+            if(width < rechargeMaxSize){
+                this.shooting = false;
+                document.getElementById("recharge_bar").style.width = width + 2 + "px";
+            } else {
+                clearInterval(intervalId);
+                this.allBullets = this.bulletsFinal;
+                this.bullet_indicator.textContent =
+                this.allBullets + "/" + this.bulletsFinal;
+                rechargeBlock.style.display = "none";
+                this.shooting = true;
+            }
+        }, speed)
     }
 
     update() {
