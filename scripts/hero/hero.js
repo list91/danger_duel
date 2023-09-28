@@ -26,6 +26,22 @@ export default class Player {
         this.addEventListeners();
         this.setStartPositionXY();
     }
+    getHpCountsSiseForSyle(){
+        var hpCountsProc = this.HP/this.hpMax*100;
+        // alert(this.hpMaxSise);
+        return this.hpMaxSise*hpCountsProc/100;
+    }
+    getHpCountsForLabel(){
+        //имеющиеся на максимальные и *100 это в процентах сколько сейчас
+        var hpSise = this.hpBar.style.width;
+        var hpPixelProc = parseInt(hpSise)/this.hpMaxSise*100;
+        // console.log(hpSise);
+        //максимальное число умнажаем на желаемы процент и делим на 100
+        return this.hpMax*hpPixelProc/100;
+    }
+    getDamage(){
+        return this.damage;
+    }
 
     getPlayer(){
         return this.player;
@@ -78,6 +94,34 @@ export default class Player {
     moveDown() {
         this.yPos += this.speedPlayer;
         this.player.style.top = this.yPos + "px";
+    }
+    setDamageHP(damage) {
+        if(this.HP < damage){
+            // this.killHero();
+        }else{
+            this.HP = this.HP-damage;
+            this.updateHP();
+
+        }
+    }
+    updateHP(){
+        this.hpBar.style.width = this.getHpCountsSiseForSyle()+"px";
+        document.getElementById("hp_title").innerText = "HP "+Math.round(this.getHpCountsForLabel());
+    }
+
+    checkCollisionsEnemy(enemy){
+        // console.log(enemy);
+        let playerRect = this.player.getBoundingClientRect();
+        let enemyRect = enemy.enemy.getBoundingClientRect();
+            // console.log(bullet.style.bottom);
+            
+            if(enemyRect.bottom >= playerRect.top &&
+                enemyRect.top <= playerRect.bottom &&
+                enemyRect.right >= playerRect.left &&
+                enemyRect.left <= playerRect.right
+                ){
+                    this.setDamageHP(enemy.getDamage())                    
+            }
     }
 
     handleCollisions(platform) {
