@@ -1,17 +1,21 @@
 export default class Enemy {
     constructor(x, y) {
+        this.hpMax = 1000;
+        this.HP = this.hpMax;
         this.xPos = x;
         this.yPos = y;
-        this.speedPlayer = 5;
-
+        this.speedEnemy = 4;
+        this.damage = 4;
+        
         // после вызова этого метода в поле enemy находится созданный объект 
-        var top = Math.floor(Math.random() * 1000);
-        var left = Math.floor(Math.random() * 1000);
+        var top = y;//Math.floor(Math.random() * 1000);
+        var left = x;//Math.floor(Math.random() * 1000);
         console.log(top);
         console.log(left);
-        this.createEnemyBlock(top, left);
-
-        this.createHpBar(top-30, left);
+        // this.createEnemyBlock(top, left);
+        
+        // this.createHpBar(top-30, left);
+        // this.hpMaxSise = parseInt(this.hpBar.style.width);
         
         this.platforms = document.getElementsByClassName("platform");
         this.ySpeed = 0;
@@ -21,10 +25,45 @@ export default class Enemy {
         this.isUp = false;
         this.isDown = false;
         this.currentXSpeed = this.xSpeed;
+        
 
-        // this.moveRight();
     }
-    checkDamage(bullet) {
+    getDamage(){return this.damage}
+    killEnemy(){
+        if (document.contains(this.enemy)) {
+            this.enemy.style.display = "none";
+            this.enemyBar.style.display = "none";
+            document.body.removeChild(this.enemy);
+            document.body.removeChild(this.enemyBar);
+        }
+    }
+    setDamageHP(damage) {
+        //  this.HP = this.getHpCountsForLabel();
+        if(this.HP<damage){
+            this.killEnemy();
+        }else{
+            this.HP = this.HP-damage;
+            this.hpBar.style.width = this.getHpCountsSiseForSyle()+"px";
+            // alert(this.getHpCountsSiseForSyle()+"px");
+
+        }
+
+        // console.log();
+    }
+    getHpCountsSiseForSyle(){
+        var hpCountsProc = this.HP/this.hpMax*100;
+        // alert(this.hpMaxSise);
+        return this.hpMaxSise*hpCountsProc/100;
+    }
+    getHpCountsForLabel(){
+        //имеющиеся на максимальные и *100 это в процентах сколько сейчас
+        var hpSise = this.hpBar.style.width;
+        var hpPixelProc = hpSise/this.hpMaxSise*100;
+
+        //максимальное число умнажаем на желаемы процент и делим на 100
+        return this.hpMax*hpPixelProc/100;
+    }
+    checkDamage(bullet, damage) {
         const enemyRect = this.enemy.getBoundingClientRect();
         const bulletRect = bullet.getBoundingClientRect();
 
@@ -34,7 +73,10 @@ export default class Enemy {
             bulletRect.right >= enemyRect.left &&
             bulletRect.left <= enemyRect.right
         ) {
-            this.hpBar.style.backgroundColor = "rgb(0 0 255)";
+            // console.log(Math.floor(Math.random() * (damage[1] - damage[0] + 1)) + damage[0]);
+            this.setDamageHP(Math.floor(Math.random() * (damage[1] - damage[0] + 1)) + damage[0]);
+            bullet.style.display = "none";
+            // this.hpBar.style.backgroundColor = "rgb(0 0 255)";
         }
     }
 
@@ -47,23 +89,42 @@ export default class Enemy {
         const distanceX = playerLeft - enemyLeft;
         const distanceY = olayerTop - enemyTop;
       
-        this.enemy.style.left = (enemyLeft + distanceX / 100) + 'px';
-        this.enemy.style.top = (enemyTop + distanceY / 100) + 'px';
-        console.log(distanceX);
-    }
+        // Math.sqrt();
+        var p = Math.sqrt((playerLeft - enemyLeft)**2 + (olayerTop - enemyTop)**2)/this.speedEnemy
+        var left = enemyLeft + distanceX / p;
+        var top = enemyTop + distanceY / p;
+        this.enemy.style.left = left + 'px';
+        this.enemy.style.top = top + 'px';
 
+        this.enemyBar.style.left = left-5 + 'px';
+        this.enemyBar.style.top = top-24 + 'px';
+        this.xPos = left;
+        this.yPos = top;
+        // console.log(distanceX);
+    }
     createHpBar(top, left){
         // this.enemy = document.getElementById("player");
+        this.enemyBar = document.createElement("div");
+        this.enemyBar.setAttribute("class", "enemy_bar");
+        this.enemyBar.style.width = "60px";
+        this.enemyBar.style.height = "18px";
+        this.enemyBar.style.position = "absolute";
+        this.enemyBar.style.top = top-24 + "px";
+        this.enemyBar.style.left = left-5 + "px";
         this.hpBar = document.createElement("div");
-        this.hpBar.setAttribute("class", "enemy");
+        this.hpBar.setAttribute("class", "enemy_hp_bar");
         this.hpBar.style.backgroundColor = "rgb(255 0 0)";
-        this.hpBar.style.width = "100px";
-        this.hpBar.style.height = "20px";
-        this.hpBar.style.position = "absolute";
+        this.hpBar.style.width = "50px";
+        this.hpBar.style.height = "7px";
+        this.hpBar.style.margin = "5px";
+        // this.hpBar.style.position = "absolute";
         this.hpBar.style.top = top + "px";
         this.hpBar.style.left = left + "px";
         this.setStartPositionXY(top, left);
-        document.body.appendChild(this.hpBar);
+        this.enemyBar.appendChild(this.hpBar);
+        document.body.appendChild(this.enemyBar);
+        // document.this
+        // document.body.appendChild(this.hpBar);
     }
     
     createEnemyBlock(top, left){
@@ -76,8 +137,10 @@ export default class Enemy {
         this.enemy.style.position = "absolute";
         this.enemy.style.top = top + "px";
         this.enemy.style.left = left + "px";
-        this.setStartPositionXY(top, left);
         document.body.appendChild(this.enemy);
+        this.setStartPositionXY(top, left);
+        this.createHpBar(top-30, left);
+        this.hpMaxSise = parseInt(this.hpBar.style.width);
     }
 
     setStartPositionXY(top, left) {
@@ -110,22 +173,22 @@ export default class Enemy {
     }
 
     moveLeft() {
-        this.xPos -= this.speedPlayer;
+        this.xPos -= this.speedEnemy;
         this.enemy.style.left = this.xPos + "px";
     }
 
     moveRight() {
-        this.xPos += this.speedPlayer;
+        this.xPos += this.speedEnemy;
         this.enemy.style.left = this.xPos + "px";
     }
 
     moveUp() {
-        this.yPos -= this.speedPlayer;
+        this.yPos -= this.speedEnemy;
         this.enemy.style.top = this.yPos + "px";
     }
 
     moveDown() {
-        this.yPos += this.speedPlayer;
+        this.yPos += this.speedEnemy;
         this.enemy.style.top = this.yPos + "px";
     }
 
