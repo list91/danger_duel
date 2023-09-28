@@ -1,7 +1,7 @@
-body{
+/* body{
     width: 3000px;
     height: 3000px;
-}
+} */
 
 #player {
     width: 50px;
@@ -12,6 +12,26 @@ body{
     top: 0;
     transform: rotate(270deg);
     transform-origin: center;
+    -moz-user-select: none;
+    -o-user-select:none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+     user-select: none;
+}
+.footer_panel{
+    position: fixed;
+    bottom: 3px;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    left: 50%;
+}
+.item{
+    width: 100px;
+    height: 100px;
+    background-color: black;
+    margin: 14px;
 }
 #camera{
     width: 100%;
@@ -22,7 +42,7 @@ body{
     left: 0;
 }
 .enemy_bar{
-    background-color:brown;
+    background-color:#000000;
 }
 
 /* #inventory{position: absolute;} */
@@ -31,8 +51,43 @@ body{
     display: inline-block;
     border-radius: 0 0 10px 10px;
 }
+#recharge{
+    height: 50px;
+    width: 162px;
+    margin-left: 90px;
+    background-color: #636363;
+    /* width: max-content; */
+    padding: 12px;
+    display: none;
+}
+#recharge_bar{
+    background-color: #020101;
+    /* width: 300px; */
+    height: 31px;
+}
+.panel{
+    display: inline-flex;
+}
 #gun_title{
     background-color: brown;
+}
+#hp_bar{
+    background-color: red;
+    /* width: 300px; */
+    height: 31px;
+}
+#hp{
+    background-color: #636363;
+    width: max-content;
+    padding: 12px;
+}
+#inventory{
+    background-color: #26262f;
+    width: min-content;
+    padding: 10px;
+}
+.white{
+    background-color: #fff;
 }
 
 #bullet_title{
@@ -61,6 +116,18 @@ body{
     background-color: rgb(31, 143, 31);
     margin-top: 550px;
     margin-left: 150px;
+}
+.platform4 {
+    width: 20px;
+    height: 581px;
+    background-color: rgb(31, 143, 31);
+    margin-top: -55px;
+    margin-left: 1428px;
+}
+.spawn{
+    background-color: black;
+    height: 90px;
+    margin-top: 207px;
 }
 
 .bullet {
