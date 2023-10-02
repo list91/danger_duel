@@ -1,6 +1,9 @@
 import Enemy from "./enemy.js";
 
 export default class Bot extends Enemy{
+    getEnemy(){
+        return this.enemy;
+    }
     createCheckLine(top, left){
 
         this.checkLine = document.createElement("div");
@@ -31,6 +34,7 @@ export default class Bot extends Enemy{
         this.checkBox.style.left = left + "px";
         this.checkBox.style.border = "2px solid";
         this.checkBox.style.borderRadius = "50%";
+        this.checkBox.style.transition = "transform 0.1s cubic-bezier(0, 0.12, 0.29, 0.99) 0s"
         
         
         this.enemy.setAttribute("class", "enemy");
@@ -57,7 +61,7 @@ export default class Bot extends Enemy{
     toDegrees(radians) {
         return radians * (180 / Math.PI);
     }
-    checkDamageTest(bullet, damage) {
+    checkDamageTest(bullet, data, angle, blackList) {
         const enemyRect = this.enemy.getBoundingClientRect();
         const bulletRect = bullet.getBoundingClientRect();
 
@@ -67,14 +71,49 @@ export default class Bot extends Enemy{
             bulletRect.right >= enemyRect.left &&
             bulletRect.left <= enemyRect.right
         ) {
-            // console.log(Math.floor(Math.random() * (damage[1] - damage[0] + 1)) + damage[0]);
-            this.setDamageHP(Math.floor(Math.random() * (damage[1] - damage[0] + 1)) + damage[0]);
+            document.getElementsByClassName("data_info2")[0].textContent = parseInt(document.getElementsByClassName("data_info2")[0].textContent) + 1;
+            // document.getElementsByClassName("data_info2")[0].innerText = JSON.stringify(data); 
+
+            if (blackList.data && blackList.data[angle] && "leng_step" in blackList.data[angle]) {
+                // console.log("!!!");
+                var leng_step = blackList.getData()[angle].leng_step;
+                var angle_step = blackList.getData()[angle].angle_step;
+                blackList.set(angle, {"leng_step": leng_step, "angle_step": angle_step})
+                
+                while(true){
+                    console.log("!!!");
+                    var random_leng_step = this.randomLengStep();
+                    var random_angle_step = this.randomAngleStep();
+                    var is_angle_step = false;
+                    var is_leng_step = false;
+
+                    if(!random_leng_step === blackList.getData()[angle].leng_step){
+                        is_leng_step = true;
+                    }
+                    if(!random_angle_step === blackList.getData()[angle].angle_step){
+                        is_angle_step = true;
+                    }
+                    if(is_angle_step && is_leng_step){
+                        break;
+                    }
+                    
+                }
+
+                // this.runStep(angle_step, leng_step);
+                // console.log(data.getData()[angle].leng_step);
+            } else {
+                  var random_leng_step = this.randomLengStep();
+                  var random_angle_step = this.randomAngleStep();
+              }
+
+
+            // data.set(angle, {"leng_step": random_leng_step, "angle_step": random_angle_step})
             bullet.style.display = "none";
-            // this.hpBar.style.backgroundColor = "rgb(0 0 255)";
+
         }
     }
 
-    checkShot(bullet, hero, data) {
+    checkShot(bullet, hero, data, blackList) {
         // const heroRect = hero;
         const checkBoxRect = this.checkBox.getBoundingClientRect();
         const bulletRect = bullet.getBoundingClientRect();
@@ -97,21 +136,27 @@ export default class Bot extends Enemy{
 
             var xE = enemyRect.left;
             var yE = enemyRect.top;
-
-            // console.log(xB+" xB");
-            // console.log(yB+" yB");
-
-            // console.log(xH+" xH");
-            // console.log(yH+" yH");
 // ты тут писал обработку при уроне, если урон то меняем веса(еще ты не сделал проверку на БЛЭКЛИСТ весов)
-            // console.log(xE+" xE");
-            // console.log(yE+" yE");
 
             var angle = this.toRadians(this.findAngle(xH, yH, xB, yB, xH, yH, xE, yE));
 
+            angle = Math.round(angle * 100) / 100;
+            // RUN
+            // alert(angle);
+            // alert(data.getData()[angle].angle_step);
+            if (data.data && data.data[angle] && "leng_step" in data.data[angle]) {
+                var leng_step = data.getData()[angle].leng_step;
+                var angle_step = data.getData()[angle].angle_step;
+                this.runStep(angle_step, leng_step);
+                // console.log(data.getData()[angle].leng_step);
+            } else {
+                  console.log("Поле leng_step не существует!");
+              }
 
 
-            data.set(angle, {"leng_step": 15, "angle_step": 30})
+            this.checkDamageTest(bullet, data, angle, blackList);
+
+            
 
             // if(xH > xB){
             //     angle = -1 * angle
@@ -131,11 +176,16 @@ export default class Bot extends Enemy{
             // this.hpBar.style.backgroundColor = "rgb(0 0 255)";
         }
     }
+    runStep(rad, stepSize){
+        var x = Math.cos(rad) * stepSize; // вычисляем новую позицию по оси X
+        var y = Math.sin(rad) * stepSize; // вычисляем новую позицию по оси Y
+        this.checkBox.style.transform = "translate(" + x + "px, " + y + "px)";
+    }
     random(list){
         return Math.floor(Math.random() * (list[1] - list[0] + 1)) + list[0];
     }
     randomLengStep(){
-        return this.random([0,50])
+        return this.random([0,100])
     }
     randomAngleStep(){
         return this.random([-180,180])
