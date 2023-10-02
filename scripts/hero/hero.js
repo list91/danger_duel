@@ -189,6 +189,25 @@ export default class Player {
             }
         }
     }
+    fireAtEnemy(enemy) {
+        const clickX = enemy.getBoundingClientRect().left;
+        const clickY = enemy.getBoundingClientRect().top;
+        const playerX = parseInt(
+          window.getComputedStyle(this.player).getPropertyValue("left")
+        );
+        const playerY = parseInt(
+          window.getComputedStyle(this.player).getPropertyValue("top")
+        );
+        // var list = [-0.1,0.1];
+         var rand = Math.random() * 0.10 - 0.005;;
+
+        const angle = Math.atan2(clickY - playerY, clickX - playerX)+rand;
+        // Math.floor(Math.random() * (angle+10 - angle-10 + 1)) + angle-10;
+        
+        this.createBullet(playerX, playerY, angle);
+        this.allBullets -= 1;
+        this.bullet_indicator.textContent = this.allBullets + "/" + this.bulletsFinal;
+      }
 
     createBullet(xPos, yPos, angle) {
         // for (let i = 0; i < 2; i++) {
