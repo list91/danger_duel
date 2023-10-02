@@ -2,7 +2,9 @@
     width: 3000px;
     height: 3000px;
 } */
-
+.checkBox {
+    transition: transform 0.3s ease-in-out; /* Здесь 0.3s - это время анимации, можете изменить его */
+  }
 #player {
     width: 50px;
     height: 50px;
