@@ -26,6 +26,9 @@ export default class Player {
         this.isLeft = false;
         this.isUp = false;
         this.isDown = false;
+        this.isDamage = false;
+        this.isDamageMaxCount = 50;
+        this.isDamageCount = 50;
         this.currentXSpeed = this.xSpeed;
         this.bullets = [];
         this.angleGlobal = 0;
@@ -144,7 +147,19 @@ export default class Player {
                 enemyRect.right >= playerRect.left &&
                 enemyRect.left <= playerRect.right
                 ){
-                    this.setDamageHP(enemy.getDamage())                    
+                if(this.isDamage === false){
+                    this.setDamageHP(enemy.getDamage());
+                    this.isDamage = true;    
+                } 
+                if(this.isDamage === true){
+                    if(this.isDamageCount > 0){
+                        this.isDamageCount-=1;
+                    } else {
+                        this.isDamage = false;
+                        this.isDamageCount = this.isDamageMaxCount;
+                    }
+                    // this.isDamage = true;    
+                }
             }
     }
 

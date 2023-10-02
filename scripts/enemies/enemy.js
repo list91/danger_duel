@@ -127,7 +127,7 @@ export default class Enemy {
         // document.body.appendChild(this.hpBar);
     }
     
-    createEnemyBlock(top, left){
+    createEnemyBlock(left, top){
         // this.enemy = document.getElementById("player");
         this.enemy = document.createElement("div");
         this.enemy.setAttribute("class", "enemy");
