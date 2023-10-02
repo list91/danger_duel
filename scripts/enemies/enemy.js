@@ -10,8 +10,8 @@ export default class Enemy {
         // после вызова этого метода в поле enemy находится созданный объект 
         var top = y;//Math.floor(Math.random() * 1000);
         var left = x;//Math.floor(Math.random() * 1000);
-        console.log(top);
-        console.log(left);
+        // console.log(top);
+        // console.log(left);
         // this.createEnemyBlock(top, left);
         
         // this.createHpBar(top-30, left);
@@ -200,14 +200,14 @@ export default class Enemy {
         for(let bullet of bullets){
             
             let bulletRect = bullet.getBoundingClientRect();
-            console.log(bullet.style.bottom);
+            // console.log(bullet.style.bottom);
             
             if(bulletRect.bottom >= platformRect.top &&
                 bulletRect.top <= platformRect.bottom &&
                 bulletRect.right >= platformRect.left &&
                 bulletRect.left <= platformRect.right
                 ){
-                    console.log(bullet.style.x, bullet.style.y);
+                    // console.log(bullet.style.x, bullet.style.y);
                     
                     this.createCollisionBlock(bulletRect.left, bulletRect.top);
                     bullet.style.display = "none";
