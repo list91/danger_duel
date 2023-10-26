@@ -3,26 +3,26 @@
 import Player from './hero/hero.js'
 import Gun from './hero/gun.js';
 import Data from './enemies/writerDataKeys.js';
-// import Zombie from './enemies/zombie.js';
+import Zombie from './enemies/zombie.js';
 import Enemy from './enemies/enemy.js';
 
 // title, bulletSpeed, oneShotCounts, maxBullets, rechargeSpeed, damage, radiusSpeed
 const revolver = new Gun("Пистолет", 500, 1, 15, 10, [10, 20], 0.02);
-const rifle = new Gun("Автомат", 100, 1, 332, 30, [5, 10], 0.1);
-const shotgun = new Gun("Ружье", 500, 8, 3, 10, [20, 30], 0.5);
+const rifle = new Gun("Автомат", 100, 1, 32, 30, [5, 10], 0.1);
+const shotgun = new Gun("Ружье", 500, 8, 8, 10, [20, 30], 0.5);
 
-const hero = new Player(rifle);
-const playerObject = hero.player;
 const guns = [revolver, rifle, shotgun];
+const hero = new Player(guns);
+const playerObject = hero.player;
 
 let enemiesList = [];
 
-for (let i = 0; i < 1; i++) {
+// for (let i = 0; i < 1; i++) {
 
-    var enemy = new Enemy(1220, 366);
-    enemy.createEnemyBlock(1220, 366);
-    enemiesList.push(enemy);
-  }
+//     var enemy = new Zombie(1220, Math.random() * 606 - 100);
+//     enemy.createEnemyBlock(1220, Math.random() * 606 - 200);
+//     enemiesList.push(enemy);
+//   }
 
 function update() {
 
@@ -41,6 +41,11 @@ function update() {
             enemy.checkDamage(bullet, hero.getDamage());
         };
     }
+    // if(document.getElementsByClassName("enemy").length<3){
+    //     var enemy = new Zombie(1220, Math.random() * 606 - 100);
+    //     enemy.createEnemyBlock(1220, Math.random() * 606 - 200);
+    //     enemiesList.push(enemy);
+    // }
     
     for (let platform of hero.platforms) {
         hero.handleCollisions(platform);
