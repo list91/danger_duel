@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Платформер</title>
     <link rel="stylesheet" href="style/style.css">
 </head>
@@ -44,14 +45,32 @@
         <div id="recharge_bar"></div>
     </div>
     </div>
+    <!-- ты делал индикатор переключения пушек -->
 </div>
 <div class="footer_panel">
-    <div class="item"></div>
-    <div class="item"></div>
-    <div class="item"></div>
+    <div class="item">
+        <div class="gun_footer">
+            <img src="p.png" alt="">
+            <div class="gun_footer_title">Пистолет</div><div class="gun_footer_bullets">∞</div>
+        </div>
+    </div>
+    <div class="item">
+        <div class="gun_footer">
+            <img src="r.png" alt="">
+            <div class="gun_footer_title">Автомат</div><div class="gun_footer_bullets">0</div>
+        </div>
+    </div>
+    <div class="item">
+        <div class="gun_footer">
+            <img src="s.png" alt="">
+            <div class="gun_footer_title">Ружье</div><div class="gun_footer_bullets">0</div>
+        </div>
+    </div>
 </div>
-<div class="data_info" style="background-color: #eba0a0;"></div>
-<div class="data_info2" style="background-color: #ff0404;">0</div>
+
+<!-- <div class="data_info" style="background-color: #eba0a0;"></div>
+<div class="data_info2" style="background-color: #ff0404;">0</div> -->
+
     <!-- <div id="inventory"> -->
         <!-- <object data="interface_elements/hero/inventory.html"></object> -->
         <!-- <link id="inventory" rel="import" href="interface_elements/hero/inventory.html"> -->
@@ -62,8 +81,8 @@
         <div class="platform platform3"></div>
         <div class="platform platform4"></div>
         <div class="platform platform4 spawn"></div>
-        
-        <img src="https://i.pinimg.com/originals/95/ca/f2/95caf2485c9e224a94a059377604c63f.png" id="player">
+        <!-- https://i.pinimg.com/originals/95/ca/f2/95caf2485c9e224a94a059377604c63f.png -->
+        <img src="" id="player">
     <div id="cursor"><div class="line"></div></div>
     <script type="module" src="scripts/main.js"></script>
 </body>
