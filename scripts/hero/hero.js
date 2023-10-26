@@ -1,18 +1,25 @@
 export default class Player {
-    constructor(gun) {
-        this.THIS_GUN = gun;
+    constructor(guns) {
+        this.GUNS = guns;
+        this.arrayBullets = [
+            { title: this.GUNS[0].getTitle(), bullets_global: -1, bullets: this.GUNS[0].getMaxBullets() },
+            { title: this.GUNS[1].getTitle(), bullets_global: 33, bullets: this.GUNS[1].getMaxBullets() },
+            { title: this.GUNS[2].getTitle(), bullets_global: 12, bullets: this.GUNS[2].getMaxBullets() }
+          ];
+          this.setGun(0);
+        //   this.updateHeaderIndicators();
         this.inventory = document.getElementById("hp");
         this.inventory.style.width = "324px"
-        this.gunInit();
+        // this.gunInit();
         this.hpMax = 60;
         this.hpBar = document.getElementById("hp_bar");
         this.hpBar.style.width = "300px"
-        console.log(this.hpBar.style.width);
+        // console.log(this.hpBar.style.width);
         this.hpMaxSise = parseInt(this.hpBar.style.width);
         this.HP = this.hpMax;
         this.player = document.getElementById("player");
         this.speedPlayer = 8;
-        this.rechargeSpeed = gun.getRechargeSpeed();
+        
         this.shooting = true;
         this.platforms = document.getElementsByClassName("platform");
         this.line = document.getElementsByClassName("line")[0];
@@ -35,6 +42,31 @@ export default class Player {
         this.updateHP();
         this.addEventListeners();
         this.setStartPositionXY();
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "1") {
+              // Действия по нажатию кнопки "1"
+              this.setGun(0);
+            } else if (event.key === "2") {
+              // Действия по нажатию кнопки "2"
+              this.setGun(1);
+            } else if (event.key === "3") {
+              // Действия по нажатию кнопки "3"
+              this.setGun(2);
+            }
+          });
+    }
+    updateHeaderIndicators(){
+        var count = 0;
+        for (var item of this.arrayBullets){
+            if(item.title != "Пистолет"){
+                this.setIndicatorGunSlotBullets(count, item.bullets_global);
+            }
+            count+=1;
+        }
+    }
+    setIndicatorGunSlotBullets(index, age){
+        // alert(age);
+        document.getElementsByClassName("gun_footer_bullets")[index].textContent = age;
     }
     getHpCountsSiseForSyle(){
         var hpCountsProc = this.HP/this.hpMax*100;
@@ -49,22 +81,59 @@ export default class Player {
         //максимальное число умнажаем на желаемы процент и делим на 100
         return this.hpMax*hpPixelProc/100;
     }
-    setGun(gun){
-        this.THIS_GUN = gun;
-        this.gunInit();
-    }
-    gunInit(){
-        this.radiusSpeed = this.THIS_GUN.getRadiusSpeed();
-        this.bulletCount = this.THIS_GUN.getCountsSize();
-        this.bullet_name = document.getElementById("gun");
-        this.bullet_indicator = document.getElementById("bullet");
-        this.bulletsFinal = this.THIS_GUN.getMaxBullets();
-        this.damage = this.THIS_GUN.getDamage();
-        this.allBullets = this.bulletsFinal;
+    setGun(index){
+        let slots = document.getElementsByClassName("item");
+        for(let i of slots){
+            i.style.backgroundColor = "black";
+        }
+        let slot = slots[index];
+        slot.style.backgroundColor = "#000d63";
 
-        this.bulletPeriod = this.THIS_GUN.getSpeed();
-        this.bullet_indicator.textContent = this.allBullets + "/" + this.bulletsFinal;
-        this.bullet_name.textContent = this.THIS_GUN.getTitle();
+        // if(index!=0){
+            // }
+            this.THIS_GUN = this.GUNS[index];
+            this.gunInit();
+            this.updateHeaderIndicators();
+        }
+        gunInit(){
+            this.rechargeSpeed = this.THIS_GUN.getRechargeSpeed();
+            this.radiusSpeed = this.THIS_GUN.getRadiusSpeed();
+            this.bulletCount = this.THIS_GUN.getCountsSize();
+            this.bullet_name = document.getElementById("gun");
+            this.bullet_indicator = document.getElementById("bullet");
+            this.bulletsFinal = this.THIS_GUN.getMaxBullets();
+            this.damage = this.THIS_GUN.getDamage();
+            var bullets = null;
+            // for(var item of this.arrayBullets){
+            //     if(item.title == this.THIS_GUN.getTitle()){
+            //         // bullets = item.bullets_global;
+                    
+            //     }
+            // }
+            
+            this.bulletPeriod = this.THIS_GUN.getSpeed();
+            for(var item of this.arrayBullets){
+                if(item.title == this.THIS_GUN.getTitle()){
+                
+                    this.allBullets = item.bullets;
+                    if(item.bullets_global == -1){
+                        bullets = item.bullets;
+                    } else {
+                        bullets = item.bullets_global;
+                    }
+                
+                    if(bullets>this.THIS_GUN.getMaxBullets()){
+                        this.bullet_indicator.textContent = this.allBullets + "/" + this.bulletsFinal;
+                    }else{
+                        this.allBullets = bullets;
+                        this.bullet_indicator.textContent = this.allBullets + "/" + this.bulletsFinal;
+                    }
+                }
+            }
+            if(bullets==null){
+                this.bullet_indicator.textContent = this.allBullets + "/" + this.bulletsFinal;
+            }
+            this.bullet_name.textContent = this.THIS_GUN.getTitle();
     }
     getDamage(){
         return this.damage;
@@ -122,9 +191,13 @@ export default class Player {
         this.yPos += this.speedPlayer;
         this.player.style.top = this.yPos + "px";
     }
+    killHero(){
+        // location.reload();
+    }
     setDamageHP(damage) {
         if(this.HP < damage){
-            // this.killHero();
+            this.killHero();
+            this.HP = this.hpMax;
         }else{
             this.HP = this.HP-damage;
             this.updateHP();
@@ -178,7 +251,7 @@ export default class Player {
                 bulletRect.right >= platformRect.left &&
                 bulletRect.left <= platformRect.right
                 ){
-                    console.log(bullet.style.x, bullet.style.y);
+                    // console.log(bullet.style.x, bullet.style.y);
                     
                     // this.createCollisionBlock(bulletRect.left, platformRect.top);
                     bullet.style.display = "none";
@@ -214,7 +287,7 @@ export default class Player {
           window.getComputedStyle(this.player).getPropertyValue("top")
         );
         // var list = [-0.1,0.1];
-         var rand = Math.random() * 0.10 - 0.005;;
+         var rand = Math.random() * 0.10 - 0.005;
 
         const angle = Math.atan2(clickY - playerY, clickX - playerX)+rand;
         // Math.floor(Math.random() * (angle+10 - angle-10 + 1)) + angle-10;
@@ -296,7 +369,7 @@ export default class Player {
             this.mouseDown = true;
             this.handleClick(event);
             this.mouseInterval = setInterval(() => {
-                console.log("this.mouseDown "+this.mouseDown);
+                // console.log("this.mouseDown "+this.mouseDown);
                 if(!this.mouseDown){
                     clearInterval(this.mouseInterval);
                 } else {
@@ -330,7 +403,7 @@ export default class Player {
         const lineHeight = lineRect.height;
 
         const bulletCount = this.bulletCount;
-        console.log("bulletCount "+this.allBullets);
+        // console.log("bulletCount "+this.allBullets);
         if (this.allBullets > 0) {
         for (let i = 0; i < bulletCount; i++) {
         const randomX = Math.floor(Math.random() * lineWidth) + lineX;
@@ -349,6 +422,11 @@ export default class Player {
                 this.allBullets -= 1;
                 this.bullet_indicator.textContent =
                 this.allBullets + "/" + this.bulletsFinal;
+                for(var item of this.arrayBullets){
+                    if(item.title == this.THIS_GUN.getTitle()){
+                        item.bullets = this.allBullets; 
+                    }
+                }
             }
         }
     }
@@ -367,7 +445,85 @@ export default class Player {
                 document.getElementById("recharge_bar").style.width = width + 2 + "px";
             } else {
                 clearInterval(intervalId);
-                this.allBullets = this.bulletsFinal;
+                
+                for(var item of this.arrayBullets){
+                    if(item.title == this.THIS_GUN.getTitle()){
+                        var bullets_global = item.bullets_global;
+                        var name = item.title;
+                        var bullets = item.bullets;
+
+                    }
+                }
+// .(ты туд доделывал обработку номральную с индикатором в хедере - конкретно тут ты писал если не выбран пистолет)
+                var maxBullets = this.THIS_GUN.getMaxBullets();
+                var isPistol = false;
+
+                // если пистолет то флаг
+                if(bullets_global == -1){
+                    isPistol = true;
+                    bullets_global = maxBullets;
+                }
+                
+                // если глобальные пули есть
+                if(bullets_global > 0){
+                    
+                    // если глобальных пуль больше чем максимальная вместимость
+                    if(bullets_global > maxBullets){
+                        this.allBullets = maxBullets;
+                        // console.log(bullets_global);
+                        // console.log(bullets_global);
+                        bullets_global -= bullets;
+                        for(var item of this.arrayBullets){
+                            if (item.title == name){
+                                // alert(bullets_global);
+                                item.bullets_global = item.bullets_global - bullets_global;
+                            }
+                        }
+//????? исправь ошибку с ружьем при перезарядке получается отрицательное число
+                    // если глобал пуль меньше меньше чем магазин
+                    }
+                    if (bullets_global < maxBullets && bullets == 0) {
+                        this.allBullets = bullets_global;
+                        bullets_global = 0;
+                        for(var item of this.arrayBullets){
+                            if (item.title == name){
+                                // если пистолет то обновляем ему знак безграничного боезапаса
+                                if(isPistol){
+                                    item.bullets_global = -1;
+                                    item.bullets = maxBullets;
+                                } else {
+                                    item.bullets_global = bullets_global;
+                                }
+                            }
+                        }
+                    }
+                    if (bullets_global < maxBullets && bullets != 0) {
+                        var a = maxBullets - bullets;
+                        if(a >= bullets_global){
+                            this.allBullets = bullets_global + bullets;
+                            bullets_global = 0;
+                        } else {
+                            bullets_global =- a;
+                            this.allBullets = a + bullets;
+                        }
+                        
+                        for(var item of this.arrayBullets){
+                            if (item.title == name){
+                                // если пистолет то обновляем ему знак безграничного боезапаса
+                                if(isPistol){
+                                    item.bullets_global = -1;
+                                    item.bullets = maxBullets;
+                                } else {
+                                    item.bullets_global = bullets_global;
+                                } ПЕРЕСМОТРИ ВЕСЬ АЛГОРИТМ ПЕРЕЗАРЯДКИ ИБО ТУТ НЕПРАВИЛЬНОЕ ВЫЧИСЛЕНИЕ ОСТАТКА ПУЛЬ В ТРЕТЬЕЙ ПРОВЕРКЕ ОСОБЕННО
+                            }
+                        }
+                    }
+                } else {
+                    alert("нет пуль");
+                }
+                this.updateHeaderIndicators();
+                // this.allBullets = this.bulletsFinal;
                 this.bullet_indicator.textContent =
                 this.allBullets + "/" + this.bulletsFinal;
                 rechargeBlock.style.display = "none";
