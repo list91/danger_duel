@@ -38,7 +38,7 @@ class hp_bar{
 	//обновление хп бара
 	update_bar(){
 		document.querySelectorAll('.bar')[0].style.width = this.hp*100/this.amount + "%";
-		console.log(this.hp);
+		// console.log(this.hp);
 	}
 
 }
