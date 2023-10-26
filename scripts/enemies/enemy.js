@@ -1,6 +1,6 @@
 export default class Enemy {
     constructor(x, y) {
-        this.hpMax = 1000;
+        this.hpMax = 100;
         this.HP = this.hpMax;
         this.xPos = x;
         this.yPos = y;
@@ -10,12 +10,6 @@ export default class Enemy {
         // после вызова этого метода в поле enemy находится созданный объект 
         var top = y;//Math.floor(Math.random() * 1000);
         var left = x;//Math.floor(Math.random() * 1000);
-        // console.log(top);
-        // console.log(left);
-        // this.createEnemyBlock(top, left);
-        
-        // this.createHpBar(top-30, left);
-        // this.hpMaxSise = parseInt(this.hpBar.style.width);
         
         this.platforms = document.getElementsByClassName("platform");
         this.ySpeed = 0;
