@@ -5,6 +5,13 @@
 .checkBox {
     transition: transform 0.3s ease-in-out; /* Здесь 0.3s - это время анимации, можете изменить его */
   }
+  .testMetka{
+    background-color: fuchsia;
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 57%;
+  }
 #player {
     width: 50px;
     height: 50px;
@@ -13,7 +20,7 @@
     left: 0;
     top: 0;
     transform: rotate(270deg);
-    transform-origin: center;
+    transform-origin: 30% 90%;
     -moz-user-select: none;
     -o-user-select:none;
     -khtml-user-select: none;
