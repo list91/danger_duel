@@ -4,7 +4,7 @@ export default class Player {
         this.arrayBullets = [
             { title: this.GUNS[0].getTitle(), bullets_global: -1, bullets: this.GUNS[0].getMaxBullets() },
             { title: this.GUNS[1].getTitle(), bullets_global: 33, bullets: this.GUNS[1].getMaxBullets() },
-            { title: this.GUNS[2].getTitle(), bullets_global: 12, bullets: this.GUNS[2].getMaxBullets() }
+            { title: this.GUNS[2].getTitle(), bullets_global: 8*4, bullets: this.GUNS[2].getMaxBullets() }
           ];
           this.setGun(0);
         //   this.updateHeaderIndicators();
@@ -42,16 +42,24 @@ export default class Player {
         this.updateHP();
         this.addEventListeners();
         this.setStartPositionXY();
+        
+        // this.testBlock = document.createElement("div");
+        // this.testBlock.setAttribute("class", "testMetka")
+
         document.addEventListener("keydown", (event) => {
+            
             if (event.key === "1") {
               // Действия по нажатию кнопки "1"
               this.setGun(0);
+            //   this.player.src = "https://unluckystudio.com/wp-content/uploads/2015/03/preview_idle.gif";
             } else if (event.key === "2") {
               // Действия по нажатию кнопки "2"
               this.setGun(1);
+            //   this.player.src = "https://unluckystudio.com/wp-content/uploads/2015/03/survivor-idle_rifle_0.png";
             } else if (event.key === "3") {
               // Действия по нажатию кнопки "3"
               this.setGun(2);
+            //   this.player.src = "https://unluckystudio.com/wp-content/uploads/2015/03/survivor-idle_shotgun_0.png";
             }
           });
     }
@@ -110,17 +118,18 @@ export default class Player {
                     
             //     }
             // }
-            
+            // alert(bullets);
             this.bulletPeriod = this.THIS_GUN.getSpeed();
             for(var item of this.arrayBullets){
                 if(item.title == this.THIS_GUN.getTitle()){
                 
                     this.allBullets = item.bullets;
-                    if(item.bullets_global == -1){
-                        bullets = item.bullets;
-                    } else {
-                        bullets = item.bullets_global;
-                    }
+                    bullets = item.bullets;
+                    // if(item.bullets_global == -1){
+                    // } else {
+                    //     bullets = item.bullets_global;
+                    //     // alert(bullets2);
+                    // }
                 
                     if(bullets>this.THIS_GUN.getMaxBullets()){
                         this.bullet_indicator.textContent = this.allBullets + "/" + this.bulletsFinal;
@@ -307,6 +316,43 @@ export default class Player {
         bullet.style.top = yPos + "px";
         bullet.style.transform = "rotate(" + angle + "rad)";
         document.body.appendChild(bullet);
+
+
+
+        // var block = document.getElementById('your-block-id');
+
+        // Получение стилей трансформации блока
+        var transformStyle = window.getComputedStyle(this.player).getPropertyValue('transform');
+
+        // Разбор матрицы трансформации
+        var transformMatrix = transformStyle.match(/matrix.*\((.+)\)/)[1].split(', ');
+
+        // Извлечение параметров трансформации
+        var scaleX = parseFloat(transformMatrix[0]);
+        var scaleY = parseFloat(transformMatrix[3]);
+        var angle = Math.atan2(parseFloat(transformMatrix[1]), parseFloat(transformMatrix[0]));
+
+        // Получение ширины и высоты блока
+        // var width = block.offsetWidth;
+        // var height = block.offsetHeight;
+
+        // Вычисление координат верхней части блока
+        var topX = 50 / 2 * Math.cos(angle) * scaleX;
+        var topY = 50 / 2 * Math.sin(angle) * scaleY;
+
+        var blockRect = this.player.getBoundingClientRect();
+        var topPositionX = blockRect.left + topX;
+        var topPositionY = blockRect.top + topY;
+
+
+
+        var rotatedTop = yPos + 50 * Math.sin(angle); // Вычисляем координату верхней границы после поворота
+        var rotatedRight = xPos + 50 * Math.cos(angle); // Вычисляем координату правой границы после поворота
+        
+        let metka = document.getElementsByClassName("testMetka")[0]
+        metka.style.left = topPositionY + "px";
+        metka.style.top = topPositionX + "px";
+
         this.bullets.push({
             element: bullet,
             xSpeed: Math.cos(angle) * this.bulletSpeed,
@@ -387,6 +433,7 @@ export default class Player {
     }
 
     handleClick(event) {
+        // console.log(this.arrayBullets);
         const clickX = event.clientX;
         const clickY = event.clientY;
         const playerX = parseInt(
@@ -395,6 +442,11 @@ export default class Player {
         const playerY = parseInt(
             window.getComputedStyle(this.player).getPropertyValue("top")
         );
+
+        // const playerX = this.player.getBoundingClientRect().left;
+        // const playerY = this.player.getBoundingClientRect().top; 
+
+        
 
         const lineRect = this.line.getBoundingClientRect();
         const lineX = lineRect.left;
@@ -416,6 +468,11 @@ export default class Player {
                 this.distanceBetweenPoints(clickX, clickY, playerX, playerY)
             );
 
+                // let b = document.createElement("div");
+                // b.style.position = "absolute";
+
+                // document.body.appendChild(b)
+                
                 this.createBullet(playerX, playerY, angle);
                 // this.createBullet(playerX, playerY, angle);
 
@@ -459,66 +516,78 @@ export default class Player {
                 var isPistol = false;
 
                 // если пистолет то флаг
+                console.log(bullets_global);
                 if(bullets_global == -1){
                     isPistol = true;
-                    bullets_global = maxBullets;
-                }
-                
-                // если глобальные пули есть
-                if(bullets_global > 0){
-                    
-                    // если глобальных пуль больше чем максимальная вместимость
-                    if(bullets_global > maxBullets){
-                        this.allBullets = maxBullets;
-                        // console.log(bullets_global);
-                        // console.log(bullets_global);
-                        bullets_global -= bullets;
-                        for(var item of this.arrayBullets){
-                            if (item.title == name){
-                                // alert(bullets_global);
-                                item.bullets_global = item.bullets_global - bullets_global;
-                            }
-                        }
-//????? исправь ошибку с ружьем при перезарядке получается отрицательное число
-                    // если глобал пуль меньше меньше чем магазин
-                    }
-                    if (bullets_global < maxBullets && bullets == 0) {
-                        this.allBullets = bullets_global;
+                    this.allBullets = maxBullets;
+                } else if(bullets_global > 0){
+                    let findBullets = maxBullets - this.allBullets;
+                    if(bullets_global >= findBullets){
+                        this.allBullets += findBullets;
+                        bullets_global -= findBullets;
+                    } else {
+                        this.allBullets += bullets_global;
                         bullets_global = 0;
-                        for(var item of this.arrayBullets){
-                            if (item.title == name){
-                                // если пистолет то обновляем ему знак безграничного боезапаса
-                                if(isPistol){
-                                    item.bullets_global = -1;
-                                    item.bullets = maxBullets;
-                                } else {
-                                    item.bullets_global = bullets_global;
-                                }
-                            }
+                    }
+                    for(var item of this.arrayBullets){
+                        if (item.title == name){
+                            // alert(bullets_global);
+                            item.bullets_global = bullets_global;
                         }
                     }
-                    if (bullets_global < maxBullets && bullets != 0) {
-                        var a = maxBullets - bullets;
-                        if(a >= bullets_global){
-                            this.allBullets = bullets_global + bullets;
-                            bullets_global = 0;
-                        } else {
-                            bullets_global =- a;
-                            this.allBullets = a + bullets;
-                        }
+//                     // если глобальных пуль больше чем максимальная вместимость
+//                     if(bullets_global > maxBullets){
                         
-                        for(var item of this.arrayBullets){
-                            if (item.title == name){
-                                // если пистолет то обновляем ему знак безграничного боезапаса
-                                if(isPistol){
-                                    item.bullets_global = -1;
-                                    item.bullets = maxBullets;
-                                } else {
-                                    item.bullets_global = bullets_global;
-                                } ПЕРЕСМОТРИ ВЕСЬ АЛГОРИТМ ПЕРЕЗАРЯДКИ ИБО ТУТ НЕПРАВИЛЬНОЕ ВЫЧИСЛЕНИЕ ОСТАТКА ПУЛЬ В ТРЕТЬЕЙ ПРОВЕРКЕ ОСОБЕННО
-                            }
-                        }
-                    }
+//                         this.allBullets = maxBullets;
+//                         // console.log(bullets_global);
+//                         // console.log(bullets_global);
+//                         bullets_global -= maxBullets2;
+//                         for(var item of this.arrayBullets){
+//                             if (item.title == name){
+//                                 // alert(bullets_global);
+//                                 item.bullets_global = item.bullets_global - bullets_global;
+//                             }
+//                         }
+// //????? исправь ошибку с ружьем при перезарядке получается отрицательное число
+//                     // если глобал пуль меньше меньше чем магазин
+//                     }
+//                     if (bullets_global < maxBullets && bullets == 0) {
+//                         this.allBullets = bullets_global;
+//                         bullets_global = 0;
+//                         for(var item of this.arrayBullets){
+//                             if (item.title == name){
+//                                 // если пистолет то обновляем ему знак безграничного боезапаса
+//                                 if(isPistol){
+//                                     item.bullets_global = -1;
+//                                     item.bullets = maxBullets;
+//                                 } else {
+//                                     item.bullets_global = bullets_global;
+//                                 }
+//                             }
+//                         }
+//                     }
+//                     if (bullets_global < maxBullets && bullets != 0) {
+//                         var a = maxBullets - bullets;
+//                         if(a >= bullets_global){
+//                             this.allBullets = bullets_global + bullets;
+//                             bullets_global = 0;
+//                         } else {
+//                             bullets_global =- a;
+//                             this.allBullets = a + bullets;
+//                         }
+                        
+//                         for(var item of this.arrayBullets){
+//                             if (item.title == name){
+//                                 // если пистолет то обновляем ему знак безграничного боезапаса
+//                                 if(isPistol){
+//                                     item.bullets_global = -1;
+//                                     item.bullets = maxBullets;
+//                                 } else {
+//                                     item.bullets_global = bullets_global;
+//                                 }// } ПЕРЕСМОТРИ ВЕСЬ АЛГОРИТМ ПЕРЕЗАРЯДКИ ИБО ТУТ НЕПРАВИЛЬНОЕ ВЫЧИСЛЕНИЕ ОСТАТКА ПУЛЬ В ТРЕТЬЕЙ ПРОВЕРКЕ ОСОБЕННО
+//                             }
+//                         }
+//                     }
                 } else {
                     alert("нет пуль");
                 }
