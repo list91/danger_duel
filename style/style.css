@@ -21,6 +21,11 @@
     -ms-user-select: none;
      user-select: none;
 }
+.ammo{
+    background-color: blueviolet;
+    width: 35px;
+    height: 35px;
+}
 .footer_panel{
     position: fixed;
     bottom: 3px;
